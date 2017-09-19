@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/userSystem.iml" filepath="$PROJECT_DIR$/userSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-common/userSystem-common.iml" filepath="$PROJECT_DIR$/userSystem-common/userSystem-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-dao/userSystem-dao.iml" filepath="$PROJECT_DIR$/userSystem-dao/userSystem-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-interface/userSystem-interface.iml" filepath="$PROJECT_DIR$/userSystem-interface/userSystem-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-interfaceimpl/userSystem-interfaceimpl.iml" filepath="$PROJECT_DIR$/userSystem-interfaceimpl/userSystem-interfaceimpl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-pojo/userSystem-pojo.iml" filepath="$PROJECT_DIR$/userSystem-pojo/userSystem-pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-service/userSystem-service.iml" filepath="$PROJECT_DIR$/userSystem-service/userSystem-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userSystem-web/userSystem-web.iml" filepath="$PROJECT_DIR$/userSystem-web/userSystem-web.iml" />
+    </modules>
+  </component>
+</project>

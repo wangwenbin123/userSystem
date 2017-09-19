@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="userSystem-common" />
+        <module name="userSystem-dao" />
+        <module name="userSystem-interface" />
+        <module name="userSystem-interfaceimpl" />
+        <module name="userSystem-pojo" />
+        <module name="userSystem-service" />
+        <module name="userSystem-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="userSystem" target="1.7" />
+      <module name="userSystem-common" target="1.7" />
+      <module name="userSystem-dao" target="1.7" />
+      <module name="userSystem-interface" target="1.7" />
+      <module name="userSystem-interfaceimpl" target="1.7" />
+      <module name="userSystem-pojo" target="1.7" />
+      <module name="userSystem-service" target="1.7" />
+      <module name="userSystem-web" target="1.7" />
+      <module name="userSystempojo" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

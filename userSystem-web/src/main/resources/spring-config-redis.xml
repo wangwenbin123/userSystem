@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       		http://www.springframework.org/schema/beans/spring-beans.xsd 
+       		http://www.springframework.org/schema/util
+			http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+       default-autowire="byName">
+
+	<!-- Redis 客户端  使用的时候注入这个Bean就可以了 -->
+	<bean id="redisClient"
+		  class="com.le.jr.platform.redis.support.ShardedRedisClient">
+		<!-- 执行模板类 -->
+		<property name="template" ref="redisTemplate"/>
+	</bean>
+
+	<!-- redis 操作执行模板 -->
+	<bean id="redisTemplate" class="com.le.jr.platform.redis.support.ShardedJedisTemplate">
+		<!-- Jedis分片分组对象池 -->
+		<property name="shardedJedisGroupPool" ref="shardedJedisGroupPool"/>
+		<!-- 是否设置读写分离 默认为false
+		<property name="isReadFromSlave" value="false"/>
+		-->
+		<!-- 多从节点时选择从节点的策略  默认为随机选择
+		<property name="loadBalance" value="yourloadBalance"/>
+		-->
+	</bean>
+
+	<bean id="shardedJedisGroupPool" class="com.le.jr.platform.redis.jedis.ShardedJedisGroupPool"
+		  destroy-method="close">
+		<constructor-arg index="0" ref="poolConfig"/>
+		<constructor-arg index="1" ref="shardInfos"/>
+	</bean>
+
+	<!-- 对象池配置 -->
+	<bean id="poolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+		<!-- <property name="maxActive" value="1024" /> -->
+		<property name="maxIdle" value="${redis.pool.maxIdle}"/>
+		<property name="minIdle" value="${redis.pool.minIdle}"/>
+		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+		<property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
+	</bean>
+
+	<!-- redis集群分片信息 -->
+	<util:list id="shardInfos">
+		<!-- 单片配置(一套主从) -->
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-0"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master0}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave0}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-1"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master1}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave1}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-2"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master2}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave2}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-3"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master3}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave3}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-4"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master4}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave4}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-5"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master5}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave5}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-6"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master6}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave6}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="com.le.jr.platform.redis.jedis.JedisGroupShardInfo">
+			<!-- 一套主从的名称，注意这个名称一旦使用，不要修改！！会使用这个名称来计算一致性哈希环上的节点位置 -->
+			<property name="groupName" value="redis-group-7"/>
+			<!-- master节点配置 -->
+			<property name="masterInfo">
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="redis://${redis.host.master7}"/>
+					<property name="soTimeout" value="${redis.soTimeout}" />
+					<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+				</bean>
+			</property>
+			<!-- slave节点配置 -->
+			<property name="slaveInfos">
+				<util:list>
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg value="redis://${redis.host.slave7}"/>
+						<property name="soTimeout" value="${redis.soTimeout}" />
+						<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+					</bean>
+					<!-- 可配置多个从
+					<bean class="redis.clients.jedis.JedisShardInfo">
+						<constructor-arg>redis://127.0.0.1:9777</constructor-arg>
+					</bean>
+					-->
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+
+</beans>

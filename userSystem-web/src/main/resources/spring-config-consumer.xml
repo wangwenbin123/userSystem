@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+
+
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 消费者配置 -->
+    <dubbo:consumer timeout="${dubbo.consumer.timeout}" check="${dubbo.consumer.check}" owner="${dubbo.consumer.owner}" version="${dubbo.consumer.version}"
+                    group="${dubbo.reference.group}"/>
+    <dubbo:reference id="reportInterface" interface="com.le.jr.clearing.report.interfaces.ReportInterface" />
+    <dubbo:reference id="caTransactionInterface" interface="com.le.jr.clearing.report.interfaces.CaTransactionInterface" />
+    <dubbo:reference id="reportQueryInterface" interface="com.le.jr.clearing.report.interfaces.ReportQueryInterface" />
+    <dubbo:reference id="ebsServiceOraInterface" interface="com.le.jr.clearing.report.interfaces.EbsServiceOraInterface" />
+    <dubbo:reference id="reportQueryRemoteInterface" interface="com.le.jr.clearing.report.interfaces.ReportQueryRemoteInterface" />
+    <dubbo:reference id="commonInterface" interface="com.le.jr.clearing.report.interfaces.CommonInterface" />
+
+</beans>
