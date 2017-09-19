@@ -18,10 +18,5 @@
         <!-- 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指定)，不会加载关联表的所有字段，以提高性能 -->
         <setting name="aggressiveLazyLoading" value="true"/>
     </settings>
-    <plugins>
-        <plugin interceptor="com.le.jr.clearing.configure.web.interceptor.PageInterceptor">
-            <property name="dialect" value="mysql"/>
-            <property name="pageSqlId" value=".*ListPage.*"/>
-        </plugin>
-    </plugins>
+
 </configuration>
